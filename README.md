@@ -16,6 +16,10 @@ See [Vite Configuration Reference](https://vite.dev/config/).
 
 ## Project Setup
 
+1. Copy `.env.example` and rename it to `.env`
+2. Fill in the required values
+3. Run the project
+
 ```sh
 npm install
 ```
