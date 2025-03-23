@@ -43,9 +43,8 @@ export const useProductsStore = defineStore('products', () => {
     }
   }
 
-  const fetchProductsByIds = async (
+  const getProductsByCategory = async (
     productIds: string[],
-    stateToUpdate: Ref<any>,
   ): Promise<void> => {
     const ids = productIds.join(',')
 
@@ -57,19 +56,13 @@ export const useProductsStore = defineStore('products', () => {
           productId: ids,
         },
       })
-      stateToUpdate.value = res.data.items
+      productsByCategory.value = res.data.items
     } catch (error) {
       console.error('Error fetching products:', error)
       throw error
     } finally {
       loading.value = false
     }
-  }
-
-  const getProductsByCategory = async (
-    productIds: string[],
-  ): Promise<void> => {
-    await fetchProductsByIds(productIds, productsByCategory)
   }
 
   return {
@@ -82,6 +75,5 @@ export const useProductsStore = defineStore('products', () => {
     getProductById,
 
     getProductsByCategory,
-    fetchProductsByIds,
   }
 })

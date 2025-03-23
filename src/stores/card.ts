@@ -1,9 +1,11 @@
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
-import { useProductsStore } from '@/stores/products'
+import api from '@/api'
 
 import type { CardItem } from '@/types/card'
-import type { Product } from '@/types/products'
+import type { Product, ProductsResponse } from '@/types/products'
+
+const PRODUCTS_URL = 'products'
 
 export const useCardStore = defineStore('card', () => {
   const loading = ref<boolean>(false)
@@ -85,16 +87,25 @@ export const useCardStore = defineStore('card', () => {
   }
 
   const getAllProductsFromCard = async (): Promise<void> => {
-    const productsStore = useProductsStore()
-
     const productIds = cardProductsIdsAndCounts.value.map(
       (it) => it.id,
     )
 
-    await productsStore.fetchProductsByIds(
-      productIds,
-      allProductsFromCard,
-    )
+    loading.value = true
+
+    try {
+      const res = await api.get<ProductsResponse>(PRODUCTS_URL, {
+        params: {
+          productId: productIds,
+        },
+      })
+      allProductsFromCard.value = res.data.items
+    } catch (error) {
+      console.error('Error fetching products:', error)
+      throw error
+    } finally {
+      loading.value = false
+    }
   }
 
   const placeOrder = () => {

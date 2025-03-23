@@ -18,6 +18,7 @@ const { category, loading: categoryLoader } =
 const productsStore = useProductsStore()
 const { productsByCategory, loading: productsLoader } =
   storeToRefs(productsStore)
+
 const cardStore = useCardStore()
 
 const categoryId = computed(() => route.params.categoryId)
