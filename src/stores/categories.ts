@@ -3,8 +3,7 @@ import { defineStore } from 'pinia'
 import api from '@/api'
 
 import type { Category, CategoriesResponse } from '@/types/categories'
-
-const CATEGORIES_URL = 'categories'
+import { CATEGORIES_URL } from '@/helpers/constants'
 
 export const useCategoriesStore = defineStore('categories', () => {
   const categories = ref<Category[]>([])

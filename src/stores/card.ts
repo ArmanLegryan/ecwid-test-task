@@ -5,8 +5,7 @@ import { LocalStorageAPI } from '@/helpers/localStorageAPI'
 
 import type { CardItem, ProductWithCount } from '@/types/card'
 import type { Product, ProductsResponse } from '@/types/products'
-
-const PRODUCTS_URL = 'products'
+import { PRODUCTS_URL } from '@/helpers/constants'
 
 export const useCardStore = defineStore('card', () => {
   const loading = ref<boolean>(false)

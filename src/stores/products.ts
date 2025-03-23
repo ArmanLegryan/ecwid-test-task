@@ -1,10 +1,9 @@
-import { type Ref, ref } from 'vue'
+import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import api from '@/api'
 
 import type { Product, ProductsResponse } from '@/types/products'
-
-const PRODUCTS_URL = 'products'
+import { PRODUCTS_URL } from '@/helpers/constants'
 
 export const useProductsStore = defineStore('products', () => {
   const loading = ref<boolean>(false)
