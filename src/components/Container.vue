@@ -5,8 +5,8 @@ defineProps({
 </script>
 
 <template>
-  <v-container>
-    <h2>{{ title }}</h2>
+  <v-container class="mb-5">
+    <h2 class="mb-3">{{ title }}</h2>
     <v-row no-gutters>
       <slot name="default" />
     </v-row>

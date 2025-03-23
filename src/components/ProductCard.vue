@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
-import type { Product } from '@/types/products.ts'
+import type { Product } from '@/types/products'
 
 defineProps<{ product: Product }>()
 </script>
@@ -31,16 +31,8 @@ defineProps<{ product: Product }>()
         Price - ${{ product.price }}
       </v-card-subtitle>
 
-      <v-card-actions>
-        <v-spacer />
-        <v-btn variant="tonal" color="orange">
-          <v-icon
-            color="orange"
-            icon="mdi-cart-outline"
-            class="me-2"
-          />
-          Buy
-        </v-btn>
+      <v-card-actions class="mt-4">
+        <slot name="actions" />
       </v-card-actions>
     </v-card>
   </router-link>

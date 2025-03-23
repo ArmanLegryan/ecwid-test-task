@@ -19,16 +19,5 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div>
-    <product-details :product="product" />
-    <v-btn
-      to="/"
-      class="position-absolute right-0 bottom-0 ma-4"
-      outlined
-      color="primary"
-    >
-      <v-icon left icon="mdi-arrow-left" class="me-2" /> Back to
-      Products
-    </v-btn>
-  </div>
+  <product-details :product="product" />
 </template>

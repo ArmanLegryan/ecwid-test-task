@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { type Ref, ref } from 'vue'
 import { defineStore } from 'pinia'
 import api from '@/api'
 
@@ -7,10 +7,12 @@ import type { Product, ProductsResponse } from '@/types/products'
 const PRODUCTS_URL = 'products'
 
 export const useProductsStore = defineStore('products', () => {
-  const products = ref<Product[]>([])
-  const product = ref<Product>({})
   const loading = ref<boolean>(false)
   const errorMessage = ref<string | null>(null)
+
+  const products = ref<Product[]>([])
+  const product = ref<Product>({})
+  const productsByCategory = ref<Product[]>([])
 
   const getAllProducts = async (): Promise<void> => {
     // TODO --> use loader component
@@ -43,6 +45,29 @@ export const useProductsStore = defineStore('products', () => {
       )
       product.value = res.data
     } catch (error) {
+      console.error('Error fetching product:', error)
+      errorMessage.value =
+        'Failed to fetch product. Please try again later.'
+      throw error
+    } finally {
+      loading.value = false
+    }
+  }
+
+  const fetchProductsByIds = async (
+    productIds: string[],
+    stateToUpdate: Ref<any>,
+  ): Promise<void> => {
+    const ids = productIds.join(',')
+
+    try {
+      const res = await api.get<ProductsResponse>(PRODUCTS_URL, {
+        params: {
+          productId: ids,
+        },
+      })
+      stateToUpdate.value = res.data.items
+    } catch (error) {
       console.error('Error fetching products:', error)
       errorMessage.value =
         'Failed to fetch products. Please try again later.'
@@ -52,13 +77,23 @@ export const useProductsStore = defineStore('products', () => {
     }
   }
 
+  const getProductsByCategory = async (
+    productIds: string[],
+  ): Promise<void> => {
+    await fetchProductsByIds(productIds, productsByCategory)
+  }
+
   return {
     products,
     product,
     loading,
     errorMessage,
+    productsByCategory,
 
     getAllProducts,
     getProductById,
+
+    getProductsByCategory,
+    fetchProductsByIds,
   }
 })
