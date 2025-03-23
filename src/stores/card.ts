@@ -1,8 +1,9 @@
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 import api from '@/api'
+import { LocalStorageAPI } from '@/helpers/localStorageAPI'
 
-import type { CardItem } from '@/types/card'
+import type { CardItem, ProductWithCount } from '@/types/card'
 import type { Product, ProductsResponse } from '@/types/products'
 
 const PRODUCTS_URL = 'products'
@@ -21,7 +22,7 @@ export const useCardStore = defineStore('card', () => {
     ),
   )
 
-  const productsWithCount = computed(() => {
+  const productsWithCount = computed<ProductWithCount[]>(() => {
     return allProductsFromCard.value
       .map((product) => {
         const cardItem = cardProductsIdsAndCounts.value.find(
@@ -37,17 +38,14 @@ export const useCardStore = defineStore('card', () => {
   })
 
   const loadCard = () => {
-    const storedCard = localStorage.getItem('card')
+    const storedCard = LocalStorageAPI.getItem<CardItem[]>('card')
     if (storedCard) {
-      cardProductsIdsAndCounts.value = JSON.parse(storedCard)
+      cardProductsIdsAndCounts.value = storedCard
     }
   }
 
   const saveCard = () => {
-    localStorage.setItem(
-      'card',
-      JSON.stringify(cardProductsIdsAndCounts.value),
-    )
+    LocalStorageAPI.setItem('card', cardProductsIdsAndCounts.value)
   }
 
   const addByOne = (productId: number) => {
