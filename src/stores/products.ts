@@ -8,25 +8,19 @@ const PRODUCTS_URL = 'products'
 
 export const useProductsStore = defineStore('products', () => {
   const loading = ref<boolean>(false)
-  const errorMessage = ref<string | null>(null)
 
   const products = ref<Product[]>([])
   const product = ref<Product>({})
   const productsByCategory = ref<Product[]>([])
 
   const getAllProducts = async (): Promise<void> => {
-    // TODO --> use loader component
     loading.value = true
-    // TODO --> use alert for error message
-    errorMessage.value = null
 
     try {
       const res = await api.get<ProductsResponse>(PRODUCTS_URL)
       products.value = res.data.items
     } catch (error) {
       console.error('Error fetching products:', error)
-      errorMessage.value =
-        'Failed to fetch products. Please try again later.'
       throw error
     } finally {
       loading.value = false
@@ -34,10 +28,7 @@ export const useProductsStore = defineStore('products', () => {
   }
 
   const getProductById = async (productId: string): Promise<void> => {
-    // TODO --> use loader component
     loading.value = true
-    // TODO --> use alert for error message
-    errorMessage.value = null
 
     try {
       const res = await api.get<Product>(
@@ -46,8 +37,6 @@ export const useProductsStore = defineStore('products', () => {
       product.value = res.data
     } catch (error) {
       console.error('Error fetching product:', error)
-      errorMessage.value =
-        'Failed to fetch product. Please try again later.'
       throw error
     } finally {
       loading.value = false
@@ -60,6 +49,8 @@ export const useProductsStore = defineStore('products', () => {
   ): Promise<void> => {
     const ids = productIds.join(',')
 
+    loading.value = true
+
     try {
       const res = await api.get<ProductsResponse>(PRODUCTS_URL, {
         params: {
@@ -69,8 +60,6 @@ export const useProductsStore = defineStore('products', () => {
       stateToUpdate.value = res.data.items
     } catch (error) {
       console.error('Error fetching products:', error)
-      errorMessage.value =
-        'Failed to fetch products. Please try again later.'
       throw error
     } finally {
       loading.value = false
@@ -87,7 +76,6 @@ export const useProductsStore = defineStore('products', () => {
     products,
     product,
     loading,
-    errorMessage,
     productsByCategory,
 
     getAllProducts,

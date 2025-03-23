@@ -7,13 +7,16 @@ import { useCardStore } from '@/stores/card'
 
 import Container from '@/components/Container.vue'
 import ProductCard from '@/components/ProductCard.vue'
+import AppSkeletonLoader from '@/components/AppSkeletonLoader.vue'
 
 const productsStore = useProductsStore()
 const categoriesStore = useCategoriesStore()
 const cardStore = useCardStore()
 
-const { products } = storeToRefs(productsStore)
-const { categories } = storeToRefs(categoriesStore)
+const { products, loading: productsLoader } =
+  storeToRefs(productsStore)
+const { categories, loading: categoriesLoader } =
+  storeToRefs(categoriesStore)
 
 onMounted(async () => {
   await productsStore.getAllProducts()
@@ -33,7 +36,9 @@ onMounted(async () => {
           md="4"
           lg="3"
         >
+          <app-skeleton-loader v-if="categoriesLoader" />
           <router-link
+            v-else
             :to="{
               name: 'Categories',
               params: { categoryId: category.id },
@@ -55,7 +60,8 @@ onMounted(async () => {
           md="4"
           lg="3"
         >
-          <product-card :product="product">
+          <app-skeleton-loader v-if="productsLoader" />
+          <product-card v-else :product="product">
             <template #actions>
               <v-spacer />
               <v-btn

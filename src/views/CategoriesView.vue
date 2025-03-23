@@ -7,14 +7,17 @@ import { useProductsStore } from '@/stores/products'
 import { useCardStore } from '@/stores/card'
 
 import ProductCard from '@/components/ProductCard.vue'
+import AppSkeletonLoader from '@/components/AppSkeletonLoader.vue'
 
 const route = useRoute()
 
 const categoriesStore = useCategoriesStore()
-const { category } = storeToRefs(categoriesStore)
+const { category, loading: categoryLoader } =
+  storeToRefs(categoriesStore)
 
 const productsStore = useProductsStore()
-const { productsByCategory } = storeToRefs(productsStore)
+const { productsByCategory, loading: productsLoader } =
+  storeToRefs(productsStore)
 const cardStore = useCardStore()
 
 const categoryId = computed(() => route.params.categoryId)
@@ -29,12 +32,13 @@ onMounted(async () => {
   <v-container>
     <p class="text-h5 mb-4 font-weight-bold">Category details</p>
 
-    <div class="mb-9">
+    <app-skeleton-loader v-if="categoryLoader" />
+    <div v-else class="mb-9">
       <p>{{ category.name }}</p>
     </div>
 
     <p class="text-h5 mb-4 font-weight-bold">
-      Products by {{ category.name }}
+      Products by {{ category.name || '-' }}
     </p>
 
     <v-row>
@@ -46,7 +50,8 @@ onMounted(async () => {
         md="4"
         lg="3"
       >
-        <product-card :product="product">
+        <app-skeleton-loader v-if="productsLoader" />
+        <product-card v-else :product="product">
           <template #actions>
             <v-spacer />
             <v-btn

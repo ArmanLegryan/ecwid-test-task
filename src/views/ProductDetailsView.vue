@@ -7,7 +7,7 @@ import { useProductsStore } from '@/stores/products'
 import ProductDetails from '@/components/ProductDetails.vue'
 
 const productsStore = useProductsStore()
-const { product } = storeToRefs(productsStore)
+const { product, loading } = storeToRefs(productsStore)
 
 const route = useRoute()
 
@@ -19,5 +19,5 @@ onMounted(async () => {
 </script>
 
 <template>
-  <product-details :product="product" />
+  <product-details :loading="loading" :product="product" />
 </template>

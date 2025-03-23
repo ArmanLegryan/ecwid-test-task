@@ -13,7 +13,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <v-app>
+  <v-app class="bg-grey-lighten-5">
     <app-nav-bar />
     <div class="mt-15 pt-5">
       <RouterView />

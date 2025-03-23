@@ -1,13 +1,15 @@
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
+import { onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useCardStore } from '@/stores/card'
 
 import Container from '@/components/Container.vue'
 import ProductCard from '@/components/ProductCard.vue'
+import AppSkeletonLoader from '@/components/AppSkeletonLoader.vue'
 
 const cardStore = useCardStore()
-const { productsWithCount, orderPlaced, cardItemsCount } = storeToRefs(cardStore)
+const { loading, productsWithCount, orderPlaced, cardItemsCount } =
+  storeToRefs(cardStore)
 
 onMounted(async () => {
   await cardStore.getAllProductsFromCard()
@@ -15,7 +17,10 @@ onMounted(async () => {
 </script>
 
 <template>
-  <container title="Card">
+  <container v-if="!cardItemsCount">
+    <p class="text-h5">Your card is empty</p>
+  </container>
+  <container v-else title="Card">
     <template #default>
       <v-col
         v-for="product in productsWithCount"
@@ -25,7 +30,8 @@ onMounted(async () => {
         md="4"
         lg="3"
       >
-        <product-card :product="product">
+        <app-skeleton-loader v-if="loading" />
+        <product-card v-else :product="product">
           <template #actions>
             <v-btn
               icon="mdi-minus"
@@ -66,7 +72,7 @@ onMounted(async () => {
 
   <v-alert
     v-if="orderPlaced"
-    class="position-fixed left-0 bottom-0 ma-10"
+    class="position-fixed right-0 bottom-0 ma-10"
     max-width="400px"
     text="Congratulations on your purchase!"
     type="success"

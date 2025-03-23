@@ -1,10 +1,12 @@
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
-import type { CardItem } from '@/types/card'
-import type { Product } from '@/types/products'
 import { useProductsStore } from '@/stores/products'
 
+import type { CardItem } from '@/types/card'
+import type { Product } from '@/types/products'
+
 export const useCardStore = defineStore('card', () => {
+  const loading = ref<boolean>(false)
   const cardProductsIdsAndCounts = ref<CardItem[]>([])
   const allProductsFromCard = ref<Product[]>([])
 
@@ -88,6 +90,7 @@ export const useCardStore = defineStore('card', () => {
     const productIds = cardProductsIdsAndCounts.value.map(
       (it) => it.id,
     )
+
     await productsStore.fetchProductsByIds(
       productIds,
       allProductsFromCard,
@@ -104,6 +107,7 @@ export const useCardStore = defineStore('card', () => {
   }
 
   return {
+    loading,
     cardProductsIdsAndCounts,
     cardItemsCount,
     allProductsFromCard,
